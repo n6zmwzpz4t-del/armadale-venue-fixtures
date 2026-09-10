@@ -1,17 +1,21 @@
 import {selectFixtures,validateReport,perthDate,addDays,VIEWS,SIDES} from './view-model.mjs';
 const ROOT=new URL('./',import.meta.url), SOURCE='https://raw.githubusercontent.com/n6zmwzpz4t-del/armadale-venue-fixtures/main/reports/club.json';
-const container=document.getElementById('fixtures'),notice=document.getElementById('notice'),select=document.getElementById('side'),more=document.getElementById('more');
+const container=document.getElementById('fixtures'),notice=document.getElementById('notice'),select=document.getElementById('side'),competitionSelect=document.getElementById('competition'),more=document.getElementById('more');
 const suffix=location.pathname.slice(ROOT.pathname.length).replace(/^\/+|\/+$/g,'');
 let view=suffix==='results'?'results':suffix==='season'?'season':'upcoming';
 let side=new URL(location.href).searchParams.get('side')||'all';if(!SIDES.includes(side))side='all';
+const COMPETITIONS=['all','miniroos','jdl','jcl'];
+let competition=new URL(location.href).searchParams.get('competition')||'all';if(!COMPETITIONS.includes(competition))competition='all';
 let report=null,limit=50;
 const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 const formatDate=date=>new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Perth',weekday:'long',day:'numeric',month:'long'}).format(new Date(date+'T12:00:00+08:00'));
 const displayTeamName=name=>String(name||'').split(/\s+-\s+/)[0].trim();
+const competitionKey=r=>{const c=String(r.competition||'').toLowerCase();if(c.includes('miniroos'))return 'miniroos';if(c.includes('development')||c.includes('jdl'))return 'jdl';if(c.includes('community')||c.includes('jcl'))return 'jcl';return '';};
+const competitionLabel={all:'All competitions',miniroos:'Miniroos',jdl:'JDL',jcl:'JCL'};
 const titles={upcoming:'Next 7 days',results:'Past results',season:'Remaining season'};
 function updateNavigation(){
- select.value=side;document.title=titles[view]+' — Armadale SC';document.getElementById('view-title').textContent=titles[view];
- for(const a of document.querySelectorAll('[data-view]')){const url=new URL(a.dataset.view==='upcoming'?'./':a.dataset.view+'/',ROOT);if(side!=='all')url.searchParams.set('side',side);a.href=url.href;if(a.dataset.view===view)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}
+ select.value=side;competitionSelect.value=competition;document.title=titles[view]+' — Armadale SC';document.getElementById('view-title').textContent=titles[view];
+ for(const a of document.querySelectorAll('[data-view]')){const url=new URL(a.dataset.view==='upcoming'?'./':a.dataset.view+'/',ROOT);if(side!=='all')url.searchParams.set('side',side);if(competition!=='all')url.searchParams.set('competition',competition);a.href=url.href;if(a.dataset.view===view)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}
  const today=perthDate();document.getElementById('view-range').textContent=view==='upcoming'?formatDate(today)+' – '+formatDate(addDays(today,6)):view==='results'?'Most recent dates first · Scores as published':"All upcoming published fixtures · Dates to be confirmed are listed last";
 }
 function row(r){
@@ -30,10 +34,10 @@ function render(){
  updateNavigation();if(!report)return;
  const checked=new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Perth',day:'numeric',month:'short',hour:'numeric',minute:'2-digit',hour12:true}).format(new Date(report.retrievedAt));
  document.getElementById('updated').textContent='Checked '+checked+' AWST · All listed Armadale junior teams';
- const all=selectFixtures(report,{view,side}),rows=view==='results'?all.slice(0,limit):all;
- document.getElementById('result-count').textContent=all.length+' '+(all.length===1?'game':'games')+(side==='all'?'':' · '+(side==='home'?'Home':'Away'))+(rows.length<all.length?' · Showing latest '+rows.length:'');
- container.replaceChildren();more.hidden=rows.length>=all.length||view!=='results';
- if(!rows.length){container.append(el('p',view==='results'?'No past games match this filter.':'No upcoming published games match this filter.','result-empty'));return;}
+ const selected=selectFixtures(report,{view,side}).filter(r=>competition==='all'||competitionKey(r)===competition),rows=view==='results'?selected.slice(0,limit):selected;
+ document.getElementById('result-count').textContent=selected.length+' '+(selected.length===1?'game':'games')+(side==='all'?'':' · '+(side==='home'?'Home':'Away'))+(competition==='all'?'':' · '+competitionLabel[competition])+(rows.length<selected.length?' · Showing latest '+rows.length:'');
+ container.replaceChildren();more.hidden=rows.length>=selected.length||view!=='results';
+ if(!rows.length){container.append(el('p',view==='results'?'No past games match these filters.':'No upcoming published games match these filters.','result-empty'));return;}
  const dates=new Map();
  for(const r of rows){const date=view==='season'&&(r.outcome.kind==='postponed'||!r.date)?'tbc':r.date||'tbc';if(!dates.has(date))dates.set(date,[]);dates.get(date).push(r);}
  let index=0;
@@ -52,13 +56,15 @@ function render(){
   }
  }
 }
-function setSide(value){if(!SIDES.includes(value))throw Error('Invalid home/away filter');side=value;limit=50;const u=new URL(location.href);if(side==='all')u.searchParams.delete('side');else u.searchParams.set('side',side);history.replaceState(null,'',u);render();}
-select.addEventListener('change',()=>setSide(select.value));more.addEventListener('click',()=>{limit+=50;render();});updateNavigation();
+function syncUrl(){const u=new URL(location.href);if(side==='all')u.searchParams.delete('side');else u.searchParams.set('side',side);if(competition==='all')u.searchParams.delete('competition');else u.searchParams.set('competition',competition);history.replaceState(null,'',u);}
+function setSide(value){if(!SIDES.includes(value))throw Error('Invalid home/away filter');side=value;limit=50;syncUrl();render();}
+function setCompetition(value){if(!COMPETITIONS.includes(value))throw Error('Invalid competition filter');competition=value;limit=50;syncUrl();render();}
+select.addEventListener('change',()=>setSide(select.value));competitionSelect.addEventListener('change',()=>setCompetition(competitionSelect.value));more.addEventListener('click',()=>{limit+=50;render();});updateNavigation();
 async function load(url){const r=await fetch(url,{cache:'no-store',signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('Fixtures unavailable');return validateReport(await r.json());}
 let fresh=false;
 const snapshot=load(new URL('club.json',ROOT)).then(r=>{if(!fresh){report=r;render();}}).catch(()=>{});
 load(SOURCE).then(r=>{fresh=true;report=r;render();notice.hidden=false;notice.textContent=Date.now()-Date.parse(r.retrievedAt)>86400000?'This fixture list was checked more than 24 hours ago. Confirm changes in Squadi.':'';notice.hidden=!notice.textContent;}).catch(async()=>{await snapshot;notice.hidden=false;notice.textContent=report?'The latest update could not be loaded. Showing the saved list; check the time above and confirm changes in Squadi.':'The fixture list could not be loaded. Please try again shortly.';if(!report){container.replaceChildren();document.getElementById('updated').textContent='Fixtures unavailable';}});
 if(document.modelContext?.registerTool){
  const lifecycle=new AbortController();window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
- try{Promise.resolve(document.modelContext.registerTool({name:'filter_armadale_fixtures',title:'Filter Armadale fixtures',description:'Apply the home/away filter to the current fixture view and return the matching games.',inputSchema:{type:'object',properties:{side:{type:'string',enum:SIDES}},required:['side'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:true},execute(input){if(!input||!SIDES.includes(input.side)||Object.keys(input).some(k=>k!=='side'))throw Error('Use side all, home or away');if(!report)throw Error('Fixtures are not loaded');setSide(input.side);const matches=selectFixtures(report,{view,side});return {view,side,count:matches.length,truncated:matches.length>50,games:matches.slice(0,50).map(({date,time,home,away,venue,url})=>({date,time,home:displayTeamName(home),away:displayTeamName(away),venue,url}))};}},{signal:lifecycle.signal})).catch(()=>{});}catch{}
+ try{Promise.resolve(document.modelContext.registerTool({name:'filter_armadale_fixtures',title:'Filter Armadale fixtures',description:'Apply home/away and competition filters to the current fixture view and return the matching games.',inputSchema:{type:'object',properties:{side:{type:'string',enum:SIDES},competition:{type:'string',enum:COMPETITIONS}},required:['side'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:true},execute(input){if(!input||!SIDES.includes(input.side)||input.competition&&!COMPETITIONS.includes(input.competition)||Object.keys(input).some(k=>!['side','competition'].includes(k)))throw Error('Use valid side and competition filters');if(!report)throw Error('Fixtures are not loaded');setSide(input.side);if(input.competition)setCompetition(input.competition);const matches=selectFixtures(report,{view,side}).filter(r=>competition==='all'||competitionKey(r)===competition);return {view,side,competition,count:matches.length,truncated:matches.length>50,games:matches.slice(0,50).map(({date,time,home,away,venue,url})=>({date,time,home:displayTeamName(home),away:displayTeamName(away),venue,url}))};}},{signal:lifecycle.signal})).catch(()=>{});}catch{}
 }
