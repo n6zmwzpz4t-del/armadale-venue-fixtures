@@ -49,3 +49,18 @@ The competition keys and `yearId=8` are from the supplied 2026 links. Update the
 ## Initial verification
 
 The [live investigation](INVESTIGATION.md) records the successful end-to-end run and coverage checks. On 10 September the three supplied competitions returned **16 games for Sunday 13 September: 11 at Morgan Park and 5 at Alfred Skeet**.
+
+## Club fixtures and results website
+
+[Open the Armadale SC website](https://armadale-venue-fixtures.adamwyatt1.chatgpt.site)
+
+- **Next 7 days:** upcoming games from now through the end of the seventh Perth calendar day, grouped by date and venue, then kick-off time.
+- **Results:** past games, newest dates first, with published scores or a clear indication when a result is not available.
+- **Remaining season:** all upcoming published games, with postponed or undated matches listed under Date to be confirmed.
+- Every page has an **All / Home / Away** filter. This follows Squadi's team designation, not the physical ground. An internal Armadale match is included in both Home and Away.
+
+The club data covers names beginning Armadale or ASC across the three supplied competitions. It is stored in `reports/club.json`, refreshed by the same **Collect venue fixtures** workflow. No recurring schedule has been enabled. The website attempts to load the latest successful GitHub report whenever opened; a dated saved copy is available if that request fails.
+
+The full-season run on 10 September 2026 checked **674 Armadale fixtures**, including **32 upcoming games in the next 7 days (16 home, 16 away)** and **40 remaining-season fixtures**. The underlying result codes for some unplayed Miniroos fixtures are already DRAW/0–0/FINAL; the scraper uses match status rather than those defaults to determine completion. No future fixtures were incorrectly classified as completed after the fix. [Successful run](https://github.com/n6zmwzpz4t-del/armadale-venue-fixtures/actions/runs/34442553517).
+
+Ten scraper tests pass. The view logic was also checked for the Perth seven-day boundary, current-time cutoff, home/away selection, past results and postponed fixtures. Optional browser agent filtering is feature-detected; a supported browser context was unavailable for WebMCP protocol validation.
