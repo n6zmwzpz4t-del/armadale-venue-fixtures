@@ -4,6 +4,10 @@ Collects published Squadi fixtures for **Morgan Park** and **Alfred Skeet**, gro
 
 Competitions: Junior Community League, Junior Development League and Miniroos. All divisions and all teams are included in each competition. The initial report date is **Sunday 13 September 2026**.
 
+## Webpage
+
+The mobile-friendly webpage source is in `website/`. It loads the latest successful report from this repository, groups games under Morgan Park and Alfred Skeet, and sorts each venue by Perth kick-off time. The page shows the date and checked time; it does not claim to be a live feed from Squadi.
+
 ## Get the fixtures
 
 1. Open **Actions → Collect venue fixtures → Run workflow**.
@@ -41,3 +45,7 @@ Use `HEADED=1 npm start -- 2026-09-13` on macOS/Linux to see the browser. No Squ
 - [Miniroos](https://registration.squadi.com/livescoreSeasonFixture?organisationKey=27a1f3ab-90c1-4412-853f-d85c9b27967c&yearId=8&competitionUniqueKey=018d2b7c-6797-4cd1-a2c9-8aa2784cb832&divisionId=All)
 
 The competition keys and `yearId=8` are from the supplied 2026 links. Update them for a different season. The public app does not promise a stable API, so future changes may require a scraper update.
+
+## Initial verification
+
+The [live investigation](INVESTIGATION.md) records the successful end-to-end run and coverage checks. On 10 September the three supplied competitions returned **16 games for Sunday 13 September: 11 at Morgan Park and 5 at Alfred Skeet**.
