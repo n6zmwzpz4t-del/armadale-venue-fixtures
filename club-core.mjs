@@ -11,7 +11,8 @@ export function matchOutcome(m) {
   if(['CANCELLED','CANCELED'].includes(status))return {kind:'cancelled',label:'Cancelled',homeScore:null,awayScore:null};
   if([4,5,6].includes(a)||[4,5,6].includes(b))return {kind:'forfeit',label:a===5?'Home forfeit':b===5?'Away forfeit':'Forfeit',homeScore:null,awayScore:null};
   const hs=number(m.team1Score),as=number(m.team2Score);
-  const completed=status==='ENDED'||status==='5'||sub===5||[1,2,3].includes(a)||[1,2,3].includes(b);
+  // Miniroos may prepopulate DRAW result IDs and zero scores even for future games.
+  const completed=status==='ENDED'||status==='5'||sub===5;
   const hasScore=hs!==null&&as!==null;
   const kind=['STARTED','PAUSED'].includes(status)?'live':completed?'completed':hasScore&&(hs>0||as>0)?'reported':'unknown';
   return {kind,label:kind==='live'?'In progress':completed?'Full time':kind==='reported'?'Reported score':'Result not published',

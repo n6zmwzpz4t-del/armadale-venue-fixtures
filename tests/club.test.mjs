@@ -8,6 +8,7 @@ test('Armadale and ASC source naming, without treating opponents as our club',()
 });
 test('unplayed default zeroes and FINAL resultStatus are not reported as a draw',()=>{
  assert.equal(matchOutcome({team1Score:0,team2Score:0,resultStatus:'FINAL'}).homeScore,null);
+ assert.equal(matchOutcome({team1Score:0,team2Score:0,team1ResultId:3,team2ResultId:3,matchSubstatusRefId:1,resultStatus:'FINAL'}).kind,'unknown');
  assert.equal(matchOutcome({team1Score:0,team2Score:0,matchStatus:'ENDED'}).homeScore,0);
  assert.equal(matchOutcome({team1Score:2,team2Score:1}).kind,'reported');
 });
