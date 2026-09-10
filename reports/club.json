@@ -1,7 +1,7 @@
 {
   "season": 2026,
   "timezone": "Australia/Perth",
-  "retrievedAt": "2026-09-10T05:44:29.111Z",
+  "retrievedAt": "2026-09-10T05:49:28.481Z",
   "coverage": [
     {
       "competition": "Junior Community League",
@@ -63,8 +63,8 @@
       "hiddenRounds": 0,
       "byes": 13,
       "statuses": {
-        "completed": 132,
-        "unknown": 1,
+        "unknown": 2,
+        "completed": 131,
         "forfeit": 1
       }
     },
@@ -258,7 +258,8 @@
       "hiddenRounds": 0,
       "byes": 22,
       "statuses": {
-        "completed": 381,
+        "completed": 344,
+        "unknown": 37,
         "live": 6
       }
     }
@@ -286,10 +287,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -3758,10 +3759,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -3789,10 +3790,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -6610,10 +6611,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -7230,10 +7231,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -7912,10 +7913,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -9398,10 +9399,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -10049,10 +10050,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -11165,10 +11166,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -15722,10 +15723,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -16714,10 +16715,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -17210,10 +17211,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -17427,10 +17428,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -18975,10 +18976,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -19967,10 +19968,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -19998,10 +19999,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20029,10 +20030,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20060,10 +20061,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20091,10 +20092,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20184,10 +20185,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20215,10 +20216,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20246,10 +20247,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20277,10 +20278,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20308,10 +20309,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20339,10 +20340,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20370,10 +20371,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20401,10 +20402,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20463,10 +20464,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20494,10 +20495,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20525,10 +20526,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20556,10 +20557,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20649,10 +20650,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20680,10 +20681,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20711,10 +20712,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20742,10 +20743,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20804,10 +20805,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20835,10 +20836,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
@@ -20897,10 +20898,10 @@
       "team1ResultId": 3,
       "team2ResultId": 3,
       "outcome": {
-        "kind": "completed",
-        "label": "Full time",
-        "homeScore": 0,
-        "awayScore": 0,
+        "kind": "unknown",
+        "label": "Result not published",
+        "homeScore": null,
+        "awayScore": null,
         "homePenalty": null,
         "awayPenalty": null
       },
