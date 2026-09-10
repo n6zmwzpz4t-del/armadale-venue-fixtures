@@ -12,6 +12,7 @@ on:
     paths:
       - 'scrape.mjs'
       - 'fixture-core.mjs'
+      - 'club-core.mjs'
       - 'tests/**'
       - 'package*.json'
       - '.github/workflows/fixtures.yml'
