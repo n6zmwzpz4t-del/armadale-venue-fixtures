@@ -1,0 +1,58 @@
+name: Collect venue fixtures
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Perth fixture date (YYYY-MM-DD)'
+        required: true
+        default: '2026-09-13'
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - 'scrape.mjs'
+      - 'fixture-core.mjs'
+      - 'tests/**'
+      - 'package*.json'
+      - '.github/workflows/fixtures.yml'
+permissions:
+  contents: write
+concurrency:
+  group: venue-fixture-reports
+  cancel-in-progress: false
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - name: Collect all three competitions
+        env:
+          FIXTURE_DATE: ${{ inputs.date || '2026-09-13' }}
+        run: node scrape.mjs "$FIXTURE_DATE"
+      - name: Downloadable fixture reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: venue-fixtures-${{ inputs.date || '2026-09-13' }}
+          path: reports/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Save the checked fixtures
+        env:
+          FIXTURE_DATE: ${{ inputs.date || '2026-09-13' }}
+        run: |
+          cp "reports/$FIXTURE_DATE/fixtures.json" reports/latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Update venue fixtures for $FIXTURE_DATE"
+          git pull --rebase origin main
+          git push origin HEAD:main
