@@ -7,7 +7,7 @@ let side=new URL(location.href).searchParams.get('side')||'all';if(!SIDES.includ
 let report=null,limit=50;
 const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 const formatDate=date=>new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Perth',weekday:'long',day:'numeric',month:'long'}).format(new Date(date+'T12:00:00+08:00'));
-const displayTeamName=name=>String(name||'').replace(/(\bU\d{1,2}\b(?:\s+(?:Boys|Girls|Mixed))?)\s+(?:JDL|JCL)\b.*$/i,'$1').trim();
+const displayTeamName=name=>String(name||'').split(/\s+-\s+/)[0].trim();
 const titles={upcoming:'Next 7 days',results:'Past results',season:'Remaining season'};
 function updateNavigation(){
  select.value=side;document.title=titles[view]+' — Armadale SC';document.getElementById('view-title').textContent=titles[view];
