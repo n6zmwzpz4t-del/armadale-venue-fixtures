@@ -7,6 +7,7 @@ let side=new URL(location.href).searchParams.get('side')||'all';if(!SIDES.includ
 let report=null,limit=50;
 const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 const formatDate=date=>new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Perth',weekday:'long',day:'numeric',month:'long'}).format(new Date(date+'T12:00:00+08:00'));
+const displayTeamName=name=>String(name||'').replace(/(\bU\d{1,2}\b(?:\s+(?:Boys|Girls|Mixed))?)\s+(?:JDL|JCL)\b.*$/i,'$1').trim();
 const titles={upcoming:'Next 7 days',results:'Past results',season:'Remaining season'};
 function updateNavigation(){
  select.value=side;document.title=titles[view]+' — Armadale SC';document.getElementById('view-title').textContent=titles[view];
@@ -14,15 +15,16 @@ function updateNavigation(){
  const today=perthDate();document.getElementById('view-range').textContent=view==='upcoming'?formatDate(today)+' – '+formatDate(addDays(today,6)):view==='results'?'Most recent dates first · Scores as published':"All upcoming published fixtures · Dates to be confirmed are listed last";
 }
 function row(r){
- const article=el('article',undefined,'match');article.setAttribute('aria-label',r.home+' versus '+r.away);
+ const homeName=displayTeamName(r.home),awayName=displayTeamName(r.away);
+ const article=el('article',undefined,'match');article.setAttribute('aria-label',homeName+' versus '+awayName);
  const kickoff=el('div',r.time||'TBC','kickoff');kickoff.append(el('span',r.pitch||'Pitch TBC','pitch'),el('span',r.side==='both'?'Internal':r.side==='home'?'Home':'Away','side'));
- const teams=el('div',undefined,'teams');teams.append(el('div',r.home,r.armadaleHome?'own-team':'other-team'));const away=el('div',undefined,'away '+(r.armadaleAway?'own-team':'other-team'));away.append(el('span','v','versus'),document.createTextNode(r.away));teams.append(away);
+ const teams=el('div',undefined,'teams');teams.append(el('div',homeName,r.armadaleHome?'own-team':'other-team'));const away=el('div',undefined,'away '+(r.armadaleAway?'own-team':'other-team'));away.append(el('span','v','versus'),document.createTextNode(awayName));teams.append(away);
  const details=el('div',undefined,'details');details.append(el('div',r.division||'Division TBC','division'),el('div',r.competition,'competition'));
  const end=el('div',undefined,'match-end');const outcome=r.outcome,started=r.startTime&&Date.parse(r.startTime)<Date.now();
  const oldLive=outcome.kind==='live'&&started&&Date.now()-Date.parse(r.startTime)>=4*3600000;
  if(started&&!oldLive&&outcome.homeScore!==null&&outcome.awayScore!==null){end.append(el('div',outcome.homeScore+' – '+outcome.awayScore,'score'));if(outcome.homePenalty!==null&&outcome.homePenalty!==undefined)end.append(el('div','Pens '+outcome.homePenalty+' – '+outcome.awayPenalty,'score-note'));end.append(el('div',outcome.label,'score-note'));}
  else if(view==='results'||['postponed','abandoned','cancelled','forfeit','live'].includes(outcome.kind))end.append(el('div',oldLive?'Result not confirmed':outcome.label,'status'));
- const link=el('a','Squadi','fixture-link');link.href=r.url;link.target='_blank';link.rel='noopener';link.setAttribute('aria-label','View '+r.home+' versus '+r.away+' in Squadi');end.append(link);article.append(kickoff,teams,details,end);return article;
+ const link=el('a','Squadi','fixture-link');link.href=r.url;link.target='_blank';link.rel='noopener';link.setAttribute('aria-label','View '+homeName+' versus '+awayName+' in Squadi');end.append(link);article.append(kickoff,teams,details,end);return article;
 }
 function render(){
  updateNavigation();if(!report)return;
@@ -52,5 +54,5 @@ const snapshot=load(new URL('club.json',ROOT)).then(r=>{if(!fresh){report=r;rend
 load(SOURCE).then(r=>{fresh=true;report=r;render();notice.hidden=false;notice.textContent=Date.now()-Date.parse(r.retrievedAt)>86400000?'This fixture list was checked more than 24 hours ago. Confirm changes in Squadi.':'';notice.hidden=!notice.textContent;}).catch(async()=>{await snapshot;notice.hidden=false;notice.textContent=report?'The latest update could not be loaded. Showing the saved list; check the time above and confirm changes in Squadi.':'The fixture list could not be loaded. Please try again shortly.';if(!report){container.replaceChildren();document.getElementById('updated').textContent='Fixtures unavailable';}});
 if(document.modelContext?.registerTool){
  const lifecycle=new AbortController();window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
- try{Promise.resolve(document.modelContext.registerTool({name:'filter_armadale_fixtures',title:'Filter Armadale fixtures',description:'Apply the home/away filter to the current fixture view and return the matching games.',inputSchema:{type:'object',properties:{side:{type:'string',enum:SIDES}},required:['side'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:true},execute(input){if(!input||!SIDES.includes(input.side)||Object.keys(input).some(k=>k!=='side'))throw Error('Use side all, home or away');if(!report)throw Error('Fixtures are not loaded');setSide(input.side);const matches=selectFixtures(report,{view,side});return {view,side,count:matches.length,truncated:matches.length>50,games:matches.slice(0,50).map(({date,time,home,away,venue,url})=>({date,time,home,away,venue,url}))};}},{signal:lifecycle.signal})).catch(()=>{});}catch{}
+ try{Promise.resolve(document.modelContext.registerTool({name:'filter_armadale_fixtures',title:'Filter Armadale fixtures',description:'Apply the home/away filter to the current fixture view and return the matching games.',inputSchema:{type:'object',properties:{side:{type:'string',enum:SIDES}},required:['side'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:true},execute(input){if(!input||!SIDES.includes(input.side)||Object.keys(input).some(k=>k!=='side'))throw Error('Use side all, home or away');if(!report)throw Error('Fixtures are not loaded');setSide(input.side);const matches=selectFixtures(report,{view,side});return {view,side,count:matches.length,truncated:matches.length>50,games:matches.slice(0,50).map(({date,time,home,away,venue,url})=>({date,time,home:displayTeamName(home),away:displayTeamName(away),venue,url}))};}},{signal:lifecycle.signal})).catch(()=>{});}catch{}
 }
