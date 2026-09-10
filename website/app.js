@@ -10,6 +10,7 @@ let report=null,limit=50;
 const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 const formatDate=date=>new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Perth',weekday:'long',day:'numeric',month:'long'}).format(new Date(date+'T12:00:00+08:00'));
 const displayTeamName=name=>String(name||'').split(/\s+-\s+/)[0].trim();
+const displayPitch=pitch=>String(pitch||'Pitch TBC').replace(/^Field\b/i,'Pitch').trim();
 const competitionKey=r=>{const c=String(r.competition||'').toLowerCase();if(c.includes('miniroos'))return 'miniroos';if(c.includes('development')||c.includes('jdl'))return 'jdl';if(c.includes('community')||c.includes('jcl'))return 'jcl';return '';};
 const competitionLabel={all:'All competitions',miniroos:'Miniroos',jdl:'JDL',jcl:'JCL'};
 const titles={upcoming:'Next 7 days',results:'Past results',season:'Remaining season'};
@@ -21,7 +22,7 @@ function updateNavigation(){
 function row(r){
  const homeName=displayTeamName(r.home),awayName=displayTeamName(r.away);
  const article=el('article',undefined,'match');article.setAttribute('aria-label',homeName+' versus '+awayName);
- const kickoff=el('div',r.time||'TBC','kickoff');kickoff.append(el('span',r.pitch||'Pitch TBC','pitch'),el('span',r.side==='both'?'Internal':r.side==='home'?'Home':'Away','side'));
+ const kickoff=el('div',r.time||'TBC','kickoff');kickoff.append(el('span',displayPitch(r.pitch),'pitch'),el('span',r.side==='both'?'Internal':r.side==='home'?'Home':'Away','side'));
  const teams=el('div',undefined,'teams');teams.append(el('div',homeName,r.armadaleHome?'own-team':'other-team'));const away=el('div',undefined,'away '+(r.armadaleAway?'own-team':'other-team'));away.append(el('span','v','versus'),document.createTextNode(awayName));teams.append(away);
  const details=el('div',undefined,'details');details.append(el('div',r.division||'Division TBC','division'),el('div',r.competition,'competition'));
  const end=el('div',undefined,'match-end');const outcome=r.outcome,started=r.startTime&&Date.parse(r.startTime)<Date.now();
@@ -46,7 +47,7 @@ function render(){
   const venues=new Map();for(const r of games){const venue=r.venue||'Venue to be confirmed';if(!venues.has(venue))venues.set(venue,[]);venues.get(venue).push(r);}
   for(const [venue,matches] of venues){
    const section=el('section',undefined,'venue');const heading=el('div',undefined,'venue-heading');const h=el('h3',venue);h.id='venue-'+index++;heading.append(h,el('span',matches.length+' '+(matches.length===1?'game':'games'),'venue-count'));section.setAttribute('aria-labelledby',h.id);section.append(heading);
-   const pitchGroups=new Map();for(const r of matches){const pitch=r.pitch||'Pitch to be confirmed';if(!pitchGroups.has(pitch))pitchGroups.set(pitch,[]);pitchGroups.get(pitch).push(r);}
+   const pitchGroups=new Map();for(const r of matches){const pitch=displayPitch(r.pitch||'Pitch to be confirmed');if(!pitchGroups.has(pitch))pitchGroups.set(pitch,[]);pitchGroups.get(pitch).push(r);}
    for(const [pitch,pitchMatches] of [...pitchGroups.entries()].sort(([a],[b])=>a.localeCompare(b,undefined,{numeric:true,sensitivity:'base'}))){
     const group=el('div',undefined,'pitch-group');const ph=el('h4',pitch,'pitch-group-title');group.append(ph);
     for(const r of pitchMatches.sort((a,b)=>(a.time||'99:99').localeCompare(b.time||'99:99')))group.append(row(r));
