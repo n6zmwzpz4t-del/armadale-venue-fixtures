@@ -18,19 +18,39 @@ try {
       const u = new URL(r.url());
       if(u.hostname === 'api.squadi.com') requests.push({path:u.pathname,status:r.status()});
     });
+    let timer;
     try {
-      const pending = page.waitForResponse(r => r.request().method()==='GET' && allDivisionResponse(r.url()),{timeout:120000});
+      let accept, reject;
+      const pending = new Promise((resolve,fail)=>{accept=resolve;reject=fail;});
+      timer=setTimeout(()=>reject(new Error('Timed out waiting for all-division fixtures.')),150000);
       pending.catch(()=>{});
+      // Miniroos is larger than Chromium's inspector response-body cache. Read the
+      // normal public page request through Playwright's routing API instead.
+      // The browser supplies its normal request; no credentials or endpoints are invented.
+      await page.route('https://api.squadi.com/**/round/matches*', async route => {
+        if(route.request().method()!=='GET' || !allDivisionResponse(route.request().url())) {
+          await route.continue(); return;
+        }
+        try {
+          const response=await route.fetch({timeout:120000});
+          if(!response.ok()) throw new Error(`Fixture request returned HTTP ${response.status()}.`);
+          const body=await response.json();
+          await route.fulfill({response});
+          accept({body,url:route.request().url()});
+        } catch(error) {
+          reject(error);
+          await route.abort().catch(()=>{});
+        }
+      });
       await page.goto(fixturePage(competition.key),{waitUntil:'domcontentloaded',timeout:60000});
       const response = await pending;
-      if (!response.ok()) throw new Error(`Fixture request returned HTTP ${response.status()}.`);
-      const {rows,coverage:checked} = extractFixtures(await response.json(),competition,new URL(response.url()).searchParams.get('competitionId'),date);
+      const {rows,coverage:checked} = extractFixtures(response.body,competition,new URL(response.url).searchParams.get('competitionId'),date);
       fixtures.push(...rows); coverage.push(checked);
       console.log(JSON.stringify({coverage:checked}));
     } catch(error) {
       console.error(JSON.stringify({competition:competition.name,requests}));
       throw new Error(`${competition.name}: ${error.message}`);
-    } finally { await context.close(); }
+    } finally { clearTimeout(timer); await context.close(); }
   }
   const report = {date,timezone:TIMEZONE,retrievedAt:new Date().toISOString(),coverage,fixtures:sortFixtures(fixtures)};
   const staging = `reports/.staging-${Date.now()}`;
