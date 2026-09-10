@@ -42,7 +42,13 @@ function render(){
   const venues=new Map();for(const r of games){const venue=r.venue||'Venue to be confirmed';if(!venues.has(venue))venues.set(venue,[]);venues.get(venue).push(r);}
   for(const [venue,matches] of venues){
    const section=el('section',undefined,'venue');const heading=el('div',undefined,'venue-heading');const h=el('h3',venue);h.id='venue-'+index++;heading.append(h,el('span',matches.length+' '+(matches.length===1?'game':'games'),'venue-count'));section.setAttribute('aria-labelledby',h.id);section.append(heading);
-   for(const r of matches.sort((a,b)=>(a.time||'').localeCompare(b.time||'')||a.pitch.localeCompare(b.pitch,undefined,{numeric:true})))section.append(row(r));container.append(section);
+   const pitchGroups=new Map();for(const r of matches){const pitch=r.pitch||'Pitch to be confirmed';if(!pitchGroups.has(pitch))pitchGroups.set(pitch,[]);pitchGroups.get(pitch).push(r);}
+   for(const [pitch,pitchMatches] of [...pitchGroups.entries()].sort(([a],[b])=>a.localeCompare(b,undefined,{numeric:true,sensitivity:'base'}))){
+    const group=el('div',undefined,'pitch-group');const ph=el('h4',pitch,'pitch-group-title');group.append(ph);
+    for(const r of pitchMatches.sort((a,b)=>(a.time||'99:99').localeCompare(b.time||'99:99')))group.append(row(r));
+    section.append(group);
+   }
+   container.append(section);
   }
  }
 }
