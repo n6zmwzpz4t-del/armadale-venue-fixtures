@@ -35,7 +35,7 @@ export function extractClub(body,competition,competitionId) {
       if(date&&(!/(?:Z|[+-]\d{2}:?\d{2})$/i.test(m.startTime)||!Number.isFinite(date.getTime())))throw new Error(`Armadale match ${m.id} has an ambiguous start time.`);
       const division=String(round.division?.name||m.divisionName||'').trim();
       for(const [team,own] of [[m.team1,armHome],[m.team2,armAway]])if(own)teams.set(String(team.id||team.teamUniqueKey||team.name),{name:team.name.trim(),division,competition:competition.name});
-      const row={id:String(m.id),competitionId:String(competitionId),competition:competition.name,division,
+      const row={id:String(m.id),competitionId:String(competitionId),competitionKey:competition.key,competition:competition.name,division,divisionId:String(round.division?.id||m.divisionId||''),homeId:String(m.team1?.id||m.team1Id||''),awayId:String(m.team2?.id||m.team2Id||''),
         startTime:date?date.toISOString():null,date:date?day.format(date):null,time:date?clock.format(date):null,
         home,away,armadaleHome:armHome,armadaleAway:armAway,side:armHome&&armAway?'both':armHome?'home':'away',
         venue:m.venueCourt?.venue?.name||'',pitch:m.venueCourt?.name||'',round:round.name||'',

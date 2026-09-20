@@ -1,0 +1,35 @@
+name: Refresh Armadale supporter data
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['supporters.mjs', 'supporters-core.mjs', 'club-core.mjs', '.github/workflows/supporters.yml']
+permissions:
+  contents: write
+concurrency:
+  group: armadale-supporter-data
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: node supporters.mjs
+      - name: Publish checked public data
+        run: |
+          git add reports/supporters.json
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Refresh Armadale supporter data'
+            git pull --rebase
+            git push
+          fi
