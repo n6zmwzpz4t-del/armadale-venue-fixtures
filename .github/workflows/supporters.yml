@@ -1,7 +1,12 @@
 name: Refresh Armadale supporter data
 on:
   schedule:
+    # GitHub cron is UTC. Keep the hourly run every day.
     - cron: '23 * * * *'
+    # Extra Sunday runs in Perth (AWST / UTC+8), at :08, :38 and :53.
+    # Together with :23 above, this gives one run every 15 minutes.
+    - cron: '8,38,53 16-23 * * 6'
+    - cron: '8,38,53 0-15 * * 0'
   workflow_dispatch:
   push:
     branches: [main]
