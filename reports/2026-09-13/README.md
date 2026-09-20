@@ -2,7 +2,7 @@
 
 **16 published fixtures. All times are Perth time.**
 
-Checked: 2026-09-20T09:17:12.126Z
+Checked: 2026-09-20T12:25:40.278Z
 
 Coverage is limited to the three supplied competitions. Hidden rounds and byes are excluded. Check Squadi links for changes and cancellations.
 
