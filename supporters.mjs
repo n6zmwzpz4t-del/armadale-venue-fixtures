@@ -77,10 +77,11 @@ try{
    await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
    await page.getByRole('table').waitFor({timeout:45000});
    // Wait for the source's loading dialog to settle, then for data or explicit empty table.
-   await page.getByText(job.division,{exact:true}).first().waitFor({state:'visible',timeout:45000});
+   const panel=page.getByRole('tabpanel',{name:'Ladder',exact:true});
+   await panel.getByText(job.division,{exact:true}).filter({visible:true}).first().waitFor({state:'visible',timeout:30000});
    await page.getByRole('dialog').filter({hasText:'Loading...'}).waitFor({state:'hidden',timeout:45000});
    await page.waitForFunction(()=>[...document.querySelectorAll('table tbody tr')].some(r=>/^\d+\s/.test(r.innerText.trim())),null,{timeout:15000}).catch(()=>{});
-   const tables=await page.locator('table').evaluateAll(ts=>ts.map(t=>[...t.rows].map(r=>[...r.cells].map(c=>(c.innerText||c.textContent||'').replace(/\s+/g,' ').trim()))));
+   const tables=await panel.getByRole('table').evaluateAll(ts=>ts.map(t=>[...t.rows].map(r=>[...r.cells].map(c=>(c.innerText||c.textContent||'').replace(/\s+/g,' ').trim()))));
    entry.rows=parseLadder(tables);
    if(entry.rows.length){if(!entry.rows.some(r=>r.armadale))throw Error('Published ladder does not contain Armadale');entry.status='ok';entry.retrievedAt=now();}
    else{
@@ -100,6 +101,6 @@ try{
  const dedup=new Map(fixtures.map(r=>[r.competitionKey+':'+r.id,r]));
  if(!dedup.size)throw Error('No club fixtures returned; retaining previous report');
  const report={schemaVersion:2,organisationKey:ORGANISATION,organisation:'Armadale Soccer Club',season:YEAR,timezone:TIMEZONE,checkedAt,retrievedAt:now(),refreshIntervalMinutes:60,coverage,fixtures:[...dedup.values()].sort((a,b)=>(a.startTime||'9999').localeCompare(b.startTime||'9999')),ladders:ladders.sort((a,b)=>a.competition.localeCompare(b.competition)||a.division.localeCompare(b.division))};
- await mkdir('reports',{recursive:true});await writeFile('reports/supporters.json.tmp',JSON.stringify(report,null,2)+'\n');await rename('reports/supporters.json.tmp','reports/supporters.json');
+ await mkdir('reports',{recursive:true});await writeFile('reports/supporters.json.tmp',JSON.stringify(report)+'\n');await rename('reports/supporters.json.tmp','reports/supporters.json');
  console.log(JSON.stringify({fixtures:report.fixtures.length,competitions:coverage.length,failedCompetitions:coverage.filter(c=>c.status==='error').length,ladders:ladders.filter(l=>l.rows.length).length,failedLadders:ladders.filter(l=>l.status==='error').length}));
 }finally{await browser.close();}
