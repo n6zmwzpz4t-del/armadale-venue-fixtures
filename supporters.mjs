@@ -15,8 +15,9 @@ try{
  const {context,page}=await newPage();
  await page.goto(sourceUrl(),{waitUntil:'domcontentloaded',timeout:60000});
  await page.getByText('Armadale Soccer Club',{exact:true}).waitFor({timeout:60000});
- const reject=page.getByRole('button',{name:'Reject non-essential',exact:true});if(await reject.isVisible())await reject.click();
- const combo=page.getByRole('combobox').nth(3);await combo.click();
+ await page.getByRole('dialog').filter({hasText:'Loading...'}).waitFor({state:'hidden',timeout:120000});
+ const reject=page.getByRole('button',{name:'Reject non-essential',exact:true});if(await reject.isVisible())await reject.click({timeout:30000});
+ const combo=page.getByRole('combobox').nth(3);await combo.press('ArrowDown');
  await page.getByRole('option').first().waitFor({state:'attached',timeout:60000});
  const competitions=new Map();let previousActive=null;
  for(let i=0;i<200;i++){
