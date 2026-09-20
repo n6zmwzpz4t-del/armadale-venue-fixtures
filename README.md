@@ -1,4 +1,18 @@
-# Armadale venue fixtures
+# Armadale SC supporter data
+
+The public supporter website is [Armadale SC Supporters](https://armadale-venue-fixtures.adamwyatt1.chatgpt.site). It replaces the original ChatGPT fixture-only page.
+
+## Club-wide supporter feed
+
+`supporters.mjs` discovers the 2026 competition choices on Armadale Soccer Club’s public Squadi page (`organisationKey=f524913b-317c-4011-8f66-e4eb3f101ebe`, `yearId=8`). It reads each competition’s normal public all-round fixture response, retains Armadale/ASC match records, and checks the published ladder tables for club divisions. The initial discovery contained 21 competition entries, including senior, women’s, junior, MiniRoos, and cup competitions.
+
+The **Refresh Armadale supporter data** workflow runs hourly at 23 minutes past the hour (UTC); GitHub may delay scheduled jobs. It saves `reports/supporters.json`, which the public ChatGPT Site fetches on opening and every five minutes while visible. This is a periodically checked feed, not real-time scoring. The Site also carries a fallback snapshot.
+
+Coverage, per-competition timestamps, unpublished tables and failed refreshes are included in the feed. Failed sources retain previous data when available. Fixtures are not converted to 0–0 results unless Squadi marks the match as played. Tables are copied from Squadi, never recomputed from incomplete results. Only public match and team-level ladder information is collected; no player lists or credentials are retained. The season is explicitly 2026; update `supporters-core.mjs` for future seasons after verifying Squadi’s year ID.
+
+Run manually with **Actions → Refresh Armadale supporter data → Run workflow**. Changes to Squadi’s public interface may require collector maintenance. Existing venue exports and the older GitHub Pages page remain available below.
+
+## Original venue fixtures
 
 Collects published Squadi fixtures for **Morgan Park** and **Alfred Skeet**, grouped by venue and sorted by Perth kick-off time.
 
