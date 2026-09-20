@@ -80,13 +80,13 @@ try{
    const panel=page.getByRole('tabpanel',{name:'Ladder',exact:true});
    await panel.getByText(job.division,{exact:true}).filter({visible:true}).first().waitFor({state:'visible',timeout:30000});
    await page.getByRole('dialog').filter({hasText:'Loading...'}).waitFor({state:'hidden',timeout:45000});
-   await page.waitForFunction(()=>[...document.querySelectorAll('table tbody tr')].some(r=>/^\d+\s/.test(r.innerText.trim())),null,{timeout:15000}).catch(()=>{});
+   await panel.getByRole('table').getByRole('row').filter({hasText:/^\d+\s|No data|not for public display/i}).first().waitFor({state:'visible',timeout:15000}).catch(()=>{});
    const tables=await panel.getByRole('table').evaluateAll(ts=>ts.map(t=>[...t.rows].map(r=>[...r.cells].map(c=>(c.innerText||c.textContent||'').replace(/\s+/g,' ').trim()))));
    entry.rows=parseLadder(tables);
-   if(entry.rows.length){if(!entry.rows.some(r=>r.armadale))throw Error('Published ladder does not contain Armadale');entry.status='ok';entry.retrievedAt=now();}
+   if(entry.rows.length){entry.status=entry.rows.some(r=>r.armadale)?'ok':'unlisted';entry.retrievedAt=now();if(entry.status==='unlisted')entry.message='Armadale is not listed in the current table for this division';}
    else{
-    const body=await page.locator('body').innerText();
-    if(!/No data|not available|not published|not displayed/i.test(body))throw Error('Ladder did not finish loading');
+    const body=await panel.innerText();
+    if(!/No data|not available|not published|not displayed|not for public display|currently being worked on/i.test(body))throw Error('Ladder did not finish loading');
     entry.message='No ladder published by Squadi';entry.retrievedAt=now();
    }
   }catch(e){
