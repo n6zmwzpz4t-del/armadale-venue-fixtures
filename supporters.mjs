@@ -11,11 +11,28 @@ const browser=await chromium.launch({headless:true});
 const fixtures=[],coverage=[],ladders=[];
 const checkedAt=now();
 async function newPage(){const c=await browser.newContext({timezoneId:TIMEZONE,locale:'en-AU'});return {context:c,page:await c.newPage()};}
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function openDiscoveryPage(attempts=3){
+ let lastError;
+ for(let attempt=1;attempt<=attempts;attempt++){
+  const {context,page}=await newPage();
+  try{
+   console.log(`Opening Squadi competition selector (attempt ${attempt}/${attempts})`);
+   await page.goto(sourceUrl(),{waitUntil:'domcontentloaded',timeout:60000});
+   await page.getByText('Armadale Soccer Club',{exact:true}).waitFor({timeout:60000});
+   await page.getByRole('dialog').filter({hasText:'Loading...'}).waitFor({state:'hidden',timeout:120000});
+   return {context,page};
+  }catch(e){
+   lastError=e;
+   console.warn(`Squadi competition selector attempt ${attempt}/${attempts} failed: ${e.message}`);
+   await context.close().catch(()=>{});
+   if(attempt<attempts)await sleep(10000*attempt);
+  }
+ }
+ throw lastError;
+}
 try{
- const {context,page}=await newPage();
- await page.goto(sourceUrl(),{waitUntil:'domcontentloaded',timeout:60000});
- await page.getByText('Armadale Soccer Club',{exact:true}).waitFor({timeout:60000});
- await page.getByRole('dialog').filter({hasText:'Loading...'}).waitFor({state:'hidden',timeout:120000});
+ const {context,page}=await openDiscoveryPage();
  const reject=page.getByRole('button',{name:'Reject non-essential',exact:true});if(await reject.isVisible())await reject.click({timeout:30000});
  const combo=page.getByRole('combobox').nth(3);await combo.press('ArrowDown');
  await page.getByRole('option').first().waitFor({state:'attached',timeout:60000});
