@@ -14,7 +14,8 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: armadale-supporter-data
+  # Share a lock with the venue-fixtures workflow because both commit files under reports/.
+  group: venue-fixture-reports
   cancel-in-progress: false
 jobs:
   refresh:
@@ -39,9 +40,28 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          # If Squadi was unavailable, supporters.mjs deliberately leaves the
+          # previous report untouched, so there is nothing to publish.
           git add reports/supporters.json
-          if ! git diff --cached --quiet; then
-            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Refresh Armadale supporter data'
-            git pull --rebase
-            git push
+          if git diff --cached --quiet; then
+            echo 'No supporter-data changes to publish.'
+            exit 0
           fi
+
+          # Build the report commit on top of the latest main branch rather
+          # than rebasing a generated JSON file, which can create conflicts
+          # when another report workflow has committed while this job ran.
+          cp reports/supporters.json "$RUNNER_TEMP/supporters.json"
+          git fetch origin main
+          git reset --hard origin/main
+          cp "$RUNNER_TEMP/supporters.json" reports/supporters.json
+          git add reports/supporters.json
+
+          if git diff --cached --quiet; then
+            echo 'The latest main branch already contains this supporter data.'
+            exit 0
+          fi
+
+          git commit -m 'Refresh Armadale supporter data'
+          git push origin HEAD:main

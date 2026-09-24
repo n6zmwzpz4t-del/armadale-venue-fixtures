@@ -29,8 +29,14 @@ async function openDiscoveryPage(attempts=3){
    if(attempt<attempts)await sleep(10000*attempt);
   }
  }
- throw lastError;
+ const error=new Error(`Squadi competition selector unavailable after ${attempts} attempts: ${lastError?.message||lastError}`);
+ error.name='SquadiUnavailableError';
+ throw error;
 }
+const isTransientSquadiFailure=e=>{
+ const message=String(e?.message||e||'');
+ return e?.name==='SquadiUnavailableError'||e?.name==='TimeoutError'||/Squadi|timeout|timed out|ERR_|competition discovery|No club fixtures returned|Loading/i.test(message);
+};
 try{
  const {context,page}=await openDiscoveryPage();
  const reject=page.getByRole('button',{name:'Reject non-essential',exact:true});if(await reject.isVisible())await reject.click({timeout:30000});
@@ -120,4 +126,11 @@ try{
  const report={schemaVersion:2,organisationKey:ORGANISATION,organisation:'Armadale Soccer Club',season:YEAR,timezone:TIMEZONE,checkedAt,retrievedAt:now(),refreshIntervalMinutes:60,coverage,fixtures:[...dedup.values()].sort((a,b)=>(a.startTime||'9999').localeCompare(b.startTime||'9999')),ladders:ladders.sort((a,b)=>a.competition.localeCompare(b.competition)||a.division.localeCompare(b.division))};
  await mkdir('reports',{recursive:true});await writeFile('reports/supporters.json.tmp',JSON.stringify(report)+'\n');await rename('reports/supporters.json.tmp','reports/supporters.json');
  console.log(JSON.stringify({fixtures:report.fixtures.length,competitions:coverage.length,failedCompetitions:coverage.filter(c=>c.status==='error').length,ladders:ladders.filter(l=>l.rows.length).length,failedLadders:ladders.filter(l=>l.status==='error').length}));
+}catch(e){
+ if(isTransientSquadiFailure(e)&&previous.fixtures?.length){
+  console.warn(`Squadi is temporarily unavailable; retaining the last good supporter report (${previous.fixtures.length} fixtures).`);
+  console.log(JSON.stringify({status:'skipped',reason:'squadi-unavailable',message:e.message,retainedFixtures:previous.fixtures.length,retainedCheckedAt:previous.checkedAt,retainedRetrievedAt:previous.retrievedAt}));
+ }else{
+  throw e;
+ }
 }finally{await browser.close();}
